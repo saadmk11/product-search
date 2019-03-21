@@ -4,6 +4,9 @@ from django.db import models
 class ProductCategory(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class Product(models.Model):
     name = models.CharField(max_length=128)
@@ -11,8 +14,9 @@ class Product(models.Model):
     final_price = models.DecimalField(max_digits=8, decimal_places=2)
     is_available = models.BooleanField(default=True)
     description = models.TextField()
-    category = models.ManyToManyField(
-        ProductCategory, related_name='products')
+    category = models.ForeignKey(
+        ProductCategory, related_name='products',
+        blank=True, null=True, on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     @property
