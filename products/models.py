@@ -10,8 +10,8 @@ class ProductCategory(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=128)
-    regular_price = models.DecimalField(max_digits=8, decimal_places=2)
-    final_price = models.DecimalField(max_digits=8, decimal_places=2)
+    regular_price = models.IntegerField()
+    final_price = models.IntegerField()
     is_available = models.BooleanField(default=True)
     description = models.TextField()
     category = models.ForeignKey(

@@ -1,33 +1,37 @@
-# from django_elasticsearch_dsl import DocType, Index
-# from products.models import Product, ProductCategory
-
-# # Name of the Elasticsearch index
-# car = Index('cars')
-# # See Elasticsearch Indices API reference for available settings
-# car.settings(
-#     number_of_shards=1,
-#     number_of_replicas=0
-# )
+from django_elasticsearch_dsl import DocType, Index, fields
+from products.models import Product, ProductCategory
 
 
-# @car.doc_type
-# class CarDocument(DocType):
-#     class Meta:
-#         model = Car # The model associated with this DocType
+product = Index('products')
 
-#         # The fields of the model you want to be indexed in Elasticsearch
-#         fields = [
-#             'name',
-#             'color',
-#             'description',
-#             'type',
-#         ]
+product.settings(
+    number_of_shards=1,
+    number_of_replicas=0
+)
 
-#         # Ignore auto updating of Elasticsearch when a model is saved
-#         # or deleted:
-#         # ignore_signals = True
-#         # Don't perform an index refresh after every update (overrides global setting):
-#         # auto_refresh = False
-#         # Paginate the django queryset used to populate the index with the specified size
-#         # (by default there is no pagination)
-#         # queryset_pagination = 5000
+
+@product.doc_type
+class ProductDocument(DocType):
+    category = fields.NestedField(properties={
+        'name': fields.TextField(),
+    })
+    discount = fields.FloatField(attr='discount')
+
+    class Meta:
+        model = Product
+
+        fields = [
+            'name',
+            'regular_price',
+            'final_price',
+            'is_available',
+            'description',
+            'timestamp',
+        ]
+
+    related_models = [ProductCategory]
+
+    def get_queryset(self):
+        return super(ProductDocument, self).get_queryset().select_related(
+            'category'
+        )
