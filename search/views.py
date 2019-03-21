@@ -8,9 +8,10 @@ def search_products(request):
     results = None
 
     if query:
-        results = ProductDocument.search().query(
+        search = ProductDocument.search().query(
             "multi_match", query=query, fields=["name", "description"]
         )
+        results = search.execute()
 
     context = {
         'results': results

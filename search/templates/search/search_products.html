@@ -32,14 +32,14 @@
         </div>
         <hr>
         {% if results %}
-        <h6><b>Hits:</b> {{ results.count }}</h5>
+        <h6><b>Hits:</b> {{ results.hits.total }}</h5>
         <div class="row">
             <div class="col-lg-12">
                 <div class="list-group">
                     {% for product in results %}
                   <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{ product.name }}</h5>
+                      <h5 class="mb-1">{{ product.name }}<small> |  ({{ product.category.name }})</small></h5>
                       <small>{{ product.timestamp }}</small>
                     </div>
                     <p class="mb-1">{{ product.description }}</p>
